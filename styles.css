@@ -160,6 +160,10 @@ span.button{cursor:default}
 .tags{margin-bottom:2rem}
 .tag{display:inline-flex;align-items:center;height:2em;margin:.2rem;padding:0 .75em;border-radius:4px;background:#f5f5f5;color:var(--ink-soft);font-size:.9rem;white-space:nowrap}
 
+/* Overview video under the title: white like the page, so only its hairline frame shows. */
+.teaser{padding:0 0 3rem;animation:fadeInUp .6s ease-out}
+.teaser-video{width:100%;height:auto;aspect-ratio:16/9;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow-card);background:var(--bg)}
+
 /* Grid videos: one video per case holds every method side by side; labels are laid over the cells, buttons switch the case. */
 .container.is-wide{max-width:calc(1120px + 3rem)}
 .gv{margin-top:2.2rem}

@@ -24,6 +24,24 @@ const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}
   update();
 })();
 
+// ---------------- overview video: plays while it is on screen, unless the visitor paused it or prefers reduced motion ----------------
+(function teaser() {
+  const video = document.getElementById('teaser-video');
+  if (!video) return;
+  video.muted = true;
+  let wanted = !reduceMotion.matches, visible = false, auto = false;
+  // A pause that the page did not issue is the visitor's choice and is kept.
+  video.addEventListener('pause', () => { if (!auto && visible && !document.hidden && !video.ended) wanted = false; });
+  video.addEventListener('play', () => { wanted = true; });
+  function refresh() {
+    auto = true;
+    if (wanted && visible && !document.hidden) video.play().catch(() => {}); else video.pause();
+    setTimeout(() => { auto = false; }, 0);
+  }
+  new IntersectionObserver(entries => { visible = entries[0].isIntersecting; refresh(); }, {threshold: 0.25}).observe(video);
+  document.addEventListener('visibilitychange', refresh);
+})();
+
 // ---------------- grid videos: one video per case with every method side by side, buttons switch the case ----------------
 (function gridPlayers() {
   const source = document.getElementById('grid-data');
