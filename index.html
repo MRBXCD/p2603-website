@@ -38,8 +38,8 @@
       <div class="nav-tabs">
         <a class="nav-tab is-active" href="#top" data-spy="top">Overview</a>
         <a class="nav-tab" href="#videos" data-spy="videos">Videos</a>
-        <a class="nav-tab" href="#method" data-spy="method">Method</a>
         <a class="nav-tab" href="#results" data-spy="results">Results</a>
+        <a class="nav-tab" href="#dataset" data-spy="method">Method</a>
       </div>
       <span class="nav-note">Anonymous submission, under double-blind review</span>
     </div>
@@ -91,50 +91,13 @@
     <section class="section" id="videos">
       <div class="container is-narrow">
         <h2 class="title">Reconstruction Results</h2>
-        <p class="subtitle">Each video plays the same frames of one clip side by side: the input first, then the other methods, and <span class="bn">AGT</span> last. Use the buttons to switch between clips.</p>
+        <p class="subtitle">Each video plays the same 20 frames of one clip side by side: the input first, then the other methods, and <span class="bn">AGT</span> last. Every method receives all 20 frames and renders them back from its reconstructed scene. Use the buttons to switch between clips.</p>
       </div>
       <div class="container is-wide">
         <div class="gv" data-grid="real"></div>
         <p class="figure-caption centered">Dashcam clips from MM-AU and BDD100K. They have no clean ground truth, and none of them is used to build <span class="bn">Amodal</span><span class="bc">Drive</span>.</p>
         <div class="gv" data-grid="syn"></div>
         <p class="figure-caption centered">Clips from the Waymo test split of <span class="bn">Amodal</span><span class="bc">Drive</span>, where a pixel-aligned clean reference exists.</p>
-      </div>
-    </section>
-
-    <div class="section-divider"></div>
-
-    <!-- ================= Method ================= -->
-    <section class="section" id="method">
-      <div class="container is-narrow">
-        <h2 class="title">Method Overview</h2>
-        <div class="figure-card">
-          <button class="figure-open" data-figure-title="Overview of AGT" aria-label="Enlarge the method overview"><img src="assets/images/fig-pipeline.webp" width="2600" height="1256" loading="lazy" decoding="async" alt="Method overview in four stages: amodal geometry recovery with masked attention and a teacher model, observability propagation from depth, cameras and the occluder mask, observed appearance reconstruction with a gate and a loss mask, and generative completion followed by scene optimization and closed-loop simulation."></button>
-        </div>
-        <p class="figure-caption"><b>Overview of <span class="bn">AGT</span>.</b> Given an obstructed driving video, AGT first recovers correct geometry under the obstructed inputs with masked attention and teacher depth distillation. Second, it computes the observability of every pixel from this geometry. Third, it reconstructs appearance only in the observed regions. Finally, the unobserved regions are filled by generative completion and optimized into the Gaussian scene, which is then ready for downstream closed-loop simulation.</p>
-        <details class="re-collapse">
-          <summary><svg class="icon"><use href="#i-images"/></svg> <span>Observability across frames</span> <svg class="icon chev"><use href="#i-down"/></svg></summary>
-          <div class="re-collapse-body">
-            <button class="figure-open" data-figure-title="Observability across frames" aria-label="Enlarge the observability illustration"><img src="assets/images/fig-observability.webp" width="2600" height="1770" loading="lazy" decoding="async" alt="Two frames of the same scene. A road point seen directly at frame t is hidden behind the occluder at frame t+1 but still counts as observed. The region that no frame observes is marked in red."></button>
-            <p class="figure-caption">A road point seen directly at frame <i>t</i> is hidden behind the occluder at frame <i>t</i>+1, but it has already been observed, so it still counts as observed. The red region is observed by no input frame.</p>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <div class="section-divider"></div>
-
-    <!-- ================= Dataset ================= -->
-    <section class="section" id="dataset">
-      <div class="container is-narrow">
-        <h2 class="wordmark-title"><span class="bn">Amodal</span><span class="bc">Drive</span></h2>
-        <p class="tagline">1,178 real occluder layers &middot; every obstructed video paired 1:1 with a clean one</p>
-        <div class="content">
-          <p>In-the-wild driving videos carry no camera poses, depth or clean targets, so they cannot supervise training directly. <span class="bn">Amodal</span><span class="bc">Drive</span> simulates them: real occluder layers are separated from internet dashcam videos by joint photometric reconstruction, their solid parts such as the <b>hood</b> and the <b>dashboard</b> are set fully opaque while windshield reflections stay translucent, and each layer is composited onto clean, fully annotated driving clips. Every obstructed video therefore has a pixel-aligned clean counterpart with cameras, depth and motion labels.</p>
-        </div>
-        <div class="figure-card">
-          <button class="figure-open" data-figure-title="AmodalDrive curation pipeline" aria-label="Enlarge the dataset curation pipeline"><img src="assets/images/fig-dataset.webp" width="2600" height="2424" loading="lazy" decoding="async" alt="Curation pipeline in three steps. Harvest: occluder layers and their opacity are separated from raw dashcam videos. Opacity refinement: proposed parts such as hood, dashboard and toy are verified as opaque or translucent. Composition: a refined layer is composited onto clean frames."></button>
-        </div>
-        <p class="figure-caption centered"><span class="bn">Amodal</span><span class="bc">Drive</span> curation pipeline. The official train/test splits of the source datasets are kept, and no occluder layer appears on both sides.</p>
       </div>
     </section>
 
@@ -223,7 +186,7 @@
         </div>
 
         <div class="gv gv-wide" data-grid="zs"></div>
-        <p class="figure-caption centered">Zero-shot clips from nuScenes and Argoverse2. Every method receives four obstructed frames and renders all 16 frames of the clip; none of the models is fine-tuned on either dataset.</p>
+        <p class="figure-caption centered">Zero-shot clips from nuScenes and Argoverse2. Every method receives four obstructed frames and renders all 16 frames of the clip. None of the models is fine-tuned on either dataset.</p>
 
         <h3 class="sub-heading">Results by occlusion severity</h3>
         <div class="table-container">
@@ -240,6 +203,9 @@
           </tbody>
           </table>
         </div>
+
+        <div class="gv gv-wide" data-grid="occ"></div>
+        <p class="figure-caption centered">Two <span class="bn">Amodal</span><span class="bc">Drive</span> test clips per bin of the table above, from a small occluder to a hood and dashboard that cover more than a fifth of the frame. Four input frames, 16 rendered frames.</p>
 
         <h3 class="sub-heading">Ablation of the training data and the model components</h3>
         <div class="table-container">
@@ -291,6 +257,43 @@
       </div>
     </section>
 
+    <div class="section-divider"></div>
+
+    <!-- ================= Dataset ================= -->
+    <section class="section" id="dataset">
+      <div class="container is-narrow">
+        <h2 class="wordmark-title"><span class="bn">Amodal</span><span class="bc">Drive</span></h2>
+        <p class="tagline">1,178 real occluder layers &middot; every obstructed video paired 1:1 with a clean one</p>
+        <div class="content">
+          <p>In-the-wild driving videos carry no camera poses, depth or clean targets, so they cannot supervise training directly. <span class="bn">Amodal</span><span class="bc">Drive</span> simulates them: real occluder layers are separated from internet dashcam videos by joint photometric reconstruction, their solid parts such as the <b>hood</b> and the <b>dashboard</b> are set fully opaque while windshield reflections stay translucent, and each layer is composited onto clean, fully annotated driving clips. Every obstructed video therefore has a pixel-aligned clean counterpart with cameras, depth and motion labels.</p>
+        </div>
+        <div class="figure-card">
+          <button class="figure-open" data-figure-title="AmodalDrive curation pipeline" aria-label="Enlarge the dataset curation pipeline"><img src="assets/images/fig-dataset.webp" width="2600" height="2424" loading="lazy" decoding="async" alt="Curation pipeline in three steps. Harvest: occluder layers and their opacity are separated from raw dashcam videos. Opacity refinement: proposed parts such as hood, dashboard and toy are verified as opaque or translucent. Composition: a refined layer is composited onto clean frames."></button>
+        </div>
+        <p class="figure-caption centered"><span class="bn">Amodal</span><span class="bc">Drive</span> curation pipeline. The official train/test splits of the source datasets are kept, and no occluder layer appears on both sides.</p>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ================= Method ================= -->
+    <section class="section" id="method">
+      <div class="container is-narrow">
+        <h2 class="title">Method Overview</h2>
+        <div class="figure-card">
+          <button class="figure-open" data-figure-title="Overview of AGT" aria-label="Enlarge the method overview"><img src="assets/images/fig-pipeline.webp" width="2600" height="1256" loading="lazy" decoding="async" alt="Method overview in four stages: amodal geometry recovery with masked attention and a teacher model, observability propagation from depth, cameras and the occluder mask, observed appearance reconstruction with a gate and a loss mask, and generative completion followed by scene optimization and closed-loop simulation."></button>
+        </div>
+        <p class="figure-caption"><b>Overview of <span class="bn">AGT</span>.</b> Given an obstructed driving video, AGT first recovers correct geometry under the obstructed inputs with masked attention and teacher depth distillation. Second, it computes the observability of every pixel from this geometry. Third, it reconstructs appearance only in the observed regions. Finally, the unobserved regions are filled by generative completion and optimized into the Gaussian scene, which is then ready for downstream closed-loop simulation.</p>
+        <details class="re-collapse">
+          <summary><svg class="icon"><use href="#i-images"/></svg> <span>Observability across frames</span> <svg class="icon chev"><use href="#i-down"/></svg></summary>
+          <div class="re-collapse-body">
+            <button class="figure-open" data-figure-title="Observability across frames" aria-label="Enlarge the observability illustration"><img src="assets/images/fig-observability.webp" width="2600" height="1770" loading="lazy" decoding="async" alt="Two frames of the same scene. A road point seen directly at frame t is hidden behind the occluder at frame t+1 but still counts as observed. The region that no frame observes is marked in red."></button>
+            <p class="figure-caption">A road point seen directly at frame <i>t</i> is hidden behind the occluder at frame <i>t</i>+1, but it has already been observed, so it still counts as observed. The red region is observed by no input frame.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
     <!-- ================= BibTeX ================= -->
     <section class="section" id="citation">
       <div class="container is-narrow">
@@ -317,6 +320,6 @@
     <div class="figure-viewport"><img id="figure-image" alt=""></div>
   </dialog>
 
-  <script type="application/json" id="grid-data">{"real": {"title": "In-the-wild dashcam videos", "width": 1566, "height": 294, "cells": [{"label": "Dashcam video", "ours": false, "x": 0.0, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "DGGT", "ours": false, "x": 33.461, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "AGT (Ours)", "ours": true, "x": 66.922, "y": 0.0, "w": 33.078, "h": 100.0}], "cases": [{"label": "MM-AU · day", "src": "assets/videos/grid-real-a.mp4", "poster": "assets/images/grid-real-a.webp"}, {"label": "MM-AU · night", "src": "assets/videos/grid-real-b.mp4", "poster": "assets/images/grid-real-b.webp"}, {"label": "BDD100K · day", "src": "assets/videos/grid-real-c.mp4", "poster": "assets/images/grid-real-c.webp"}]}, "syn": {"title": "AmodalDrive test clips", "width": 1566, "height": 294, "cells": [{"label": "Obstructed input", "ours": false, "x": 0.0, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "Clean reference", "ours": false, "x": 33.461, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "AGT (Ours)", "ours": true, "x": 66.922, "y": 0.0, "w": 33.078, "h": 100.0}], "cases": [{"label": "Day · clip 1", "src": "assets/videos/grid-syn-a.mp4", "poster": "assets/images/grid-syn-a.webp"}, {"label": "Day · clip 2", "src": "assets/videos/grid-syn-b.mp4", "poster": "assets/images/grid-syn-b.webp"}, {"label": "Day · clip 3", "src": "assets/videos/grid-syn-c.mp4", "poster": "assets/images/grid-syn-c.webp"}, {"label": "Night", "src": "assets/videos/grid-syn-d.mp4", "poster": "assets/images/grid-syn-d.webp"}]}, "zs": {"title": "Zero-shot clips", "width": 2090, "height": 594, "cells": [{"label": "Obstructed input", "ours": false, "x": 0.0, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "Clean reference", "ours": false, "x": 25.072, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "DGGT", "ours": false, "x": 50.144, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "STORM", "ours": false, "x": 75.215, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "Depth Anything 3", "ours": false, "x": 12.536, "y": 50.505, "w": 24.785, "h": 49.495}, {"label": "Instant NuRec", "ours": false, "x": 37.608, "y": 50.505, "w": 24.785, "h": 49.495}, {"label": "AGT (Ours)", "ours": true, "x": 62.679, "y": 50.505, "w": 24.785, "h": 49.495}], "cases": [{"label": "nuScenes · 1", "src": "assets/videos/grid-zs-nus-a.mp4", "poster": "assets/images/grid-zs-nus-a.webp"}, {"label": "nuScenes · 2", "src": "assets/videos/grid-zs-nus-b.mp4", "poster": "assets/images/grid-zs-nus-b.webp"}, {"label": "nuScenes · 3", "src": "assets/videos/grid-zs-nus-c.mp4", "poster": "assets/images/grid-zs-nus-c.webp"}, {"label": "Argoverse2 · 1", "src": "assets/videos/grid-zs-av2-a.mp4", "poster": "assets/images/grid-zs-av2-a.webp"}, {"label": "Argoverse2 · 2", "src": "assets/videos/grid-zs-av2-b.mp4", "poster": "assets/images/grid-zs-av2-b.webp"}, {"label": "Argoverse2 · 3", "src": "assets/videos/grid-zs-av2-c.mp4", "poster": "assets/images/grid-zs-av2-c.webp"}]}}</script>
+  <script type="application/json" id="grid-data">{"real": {"title": "In-the-wild dashcam videos", "width": 1566, "height": 294, "cells": [{"label": "Dashcam video", "ours": false, "x": 0.0, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "DGGT", "ours": false, "x": 33.461, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "AGT (Ours)", "ours": true, "x": 66.922, "y": 0.0, "w": 33.078, "h": 100.0}], "cases": [{"label": "MM-AU · day", "src": "assets/videos/grid-real-a.mp4", "poster": "assets/images/grid-real-a.webp"}, {"label": "MM-AU · night", "src": "assets/videos/grid-real-b.mp4", "poster": "assets/images/grid-real-b.webp"}, {"label": "BDD100K · day", "src": "assets/videos/grid-real-c.mp4", "poster": "assets/images/grid-real-c.webp"}]}, "syn": {"title": "AmodalDrive test clips", "width": 1566, "height": 294, "cells": [{"label": "Obstructed input", "ours": false, "x": 0.0, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "Clean reference", "ours": false, "x": 33.461, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "AGT (Ours)", "ours": true, "x": 66.922, "y": 0.0, "w": 33.078, "h": 100.0}], "cases": [{"label": "Day · clip 1", "src": "assets/videos/grid-syn-a.mp4", "poster": "assets/images/grid-syn-a.webp"}, {"label": "Day · clip 2", "src": "assets/videos/grid-syn-b.mp4", "poster": "assets/images/grid-syn-b.webp"}, {"label": "Day · clip 3", "src": "assets/videos/grid-syn-c.mp4", "poster": "assets/images/grid-syn-c.webp"}, {"label": "Night", "src": "assets/videos/grid-syn-d.mp4", "poster": "assets/images/grid-syn-d.webp"}]}, "zs": {"title": "Zero-shot clips", "width": 2090, "height": 594, "cells": [{"label": "Obstructed input", "ours": false, "x": 0.0, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "Clean reference", "ours": false, "x": 25.072, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "DGGT", "ours": false, "x": 50.144, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "STORM", "ours": false, "x": 75.215, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "Depth Anything 3", "ours": false, "x": 12.536, "y": 50.505, "w": 24.785, "h": 49.495}, {"label": "Instant NuRec", "ours": false, "x": 37.608, "y": 50.505, "w": 24.785, "h": 49.495}, {"label": "AGT (Ours)", "ours": true, "x": 62.679, "y": 50.505, "w": 24.785, "h": 49.495}], "cases": [{"label": "nuScenes · 1", "src": "assets/videos/grid-zs-nus-a.mp4", "poster": "assets/images/grid-zs-nus-a.webp"}, {"label": "nuScenes · 2", "src": "assets/videos/grid-zs-nus-b.mp4", "poster": "assets/images/grid-zs-nus-b.webp"}, {"label": "nuScenes · 3", "src": "assets/videos/grid-zs-nus-c.mp4", "poster": "assets/images/grid-zs-nus-c.webp"}, {"label": "Argoverse2 · 1", "src": "assets/videos/grid-zs-av2-a.mp4", "poster": "assets/images/grid-zs-av2-a.webp"}, {"label": "Argoverse2 · 2", "src": "assets/videos/grid-zs-av2-b.mp4", "poster": "assets/images/grid-zs-av2-b.webp"}, {"label": "Argoverse2 · 3", "src": "assets/videos/grid-zs-av2-c.mp4", "poster": "assets/images/grid-zs-av2-c.webp"}]}, "occ": {"title": "Clips by occluder area", "width": 2090, "height": 594, "cells": [{"label": "Obstructed input", "ours": false, "x": 0.0, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "Clean reference", "ours": false, "x": 25.072, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "PVG", "ours": false, "x": 50.144, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "STORM", "ours": false, "x": 75.215, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "DGGT", "ours": false, "x": 12.536, "y": 50.505, "w": 24.785, "h": 49.495}, {"label": "Instant NuRec", "ours": false, "x": 37.608, "y": 50.505, "w": 24.785, "h": 49.495}, {"label": "AGT (Ours)", "ours": true, "x": 62.679, "y": 50.505, "w": 24.785, "h": 49.495}], "cases": [{"label": "≤ 10% · 1", "src": "assets/videos/grid-occ-s-a.mp4", "poster": "assets/images/grid-occ-s-a.webp"}, {"label": "≤ 10% · 2", "src": "assets/videos/grid-occ-s-b.mp4", "poster": "assets/images/grid-occ-s-b.webp"}, {"label": "10%–20% · 1", "src": "assets/videos/grid-occ-m-a.mp4", "poster": "assets/images/grid-occ-m-a.webp"}, {"label": "10%–20% · 2", "src": "assets/videos/grid-occ-m-b.mp4", "poster": "assets/images/grid-occ-m-b.webp"}, {"label": "> 20% · 1", "src": "assets/videos/grid-occ-l-a.mp4", "poster": "assets/images/grid-occ-l-a.webp"}, {"label": "> 20% · 2", "src": "assets/videos/grid-occ-l-b.mp4", "poster": "assets/images/grid-occ-l-b.webp"}]}}</script>
 </body>
 </html>
