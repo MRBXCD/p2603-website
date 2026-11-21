@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="AGT: a feed-forward model for amodal 4D reconstruction from obstructed driving videos.">
+  <title>AGT: Amodal 4D Reconstruction from Obstructed Driving Videos</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 2h8l5 5v15H6Z"/><path d="M14 2v6h5M9 13h7M9 17h7"/></symbol>
+      <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></symbol>
+      <symbol id="i-quote" viewBox="0 0 24 24"><path d="M5 4h10l4 4v12H5Z"/><path d="M9 11h2l-1 4M14 11h2l-1 4"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="m5 9 7 7 7-7"/></symbol>
+      <symbol id="i-up" viewBox="0 0 24 24"><path d="m5 15 7-7 7 7"/></symbol>
+      <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+      <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+      <symbol id="i-arrows" viewBox="0 0 24 24"><path d="M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4"/></symbol>
+      <symbol id="i-table" viewBox="0 0 24 24"><path d="M3 5h18v14H3ZM3 10h18M3 15h18M9 5v14"/></symbol>
+      <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 5h9M4 12h15M4 19h12"/></symbol>
+      <symbol id="i-images" viewBox="0 0 24 24"><path d="M3 5h18v14H3Z"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="9" r="1.2"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><path d="M9 9h11v12H9Z"/><path d="M5 15H4V3h11v2"/></symbol>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8Z"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6ZM14 4h4v16h-4Z"/></symbol>
+    </defs>
+  </svg>
+
+  <a class="skip-link" href="#results">Skip to results</a>
+
+  <nav class="nav" aria-label="Page sections">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#top"><span class="mark" aria-hidden="true">4D</span><span>AGT</span></a>
+      <div class="nav-tabs">
+        <a class="nav-tab is-active" href="#top" data-spy="top">Overview</a>
+        <a class="nav-tab" href="#videos" data-spy="videos">Videos</a>
+        <a class="nav-tab" href="#method" data-spy="method">Method</a>
+        <a class="nav-tab" href="#results" data-spy="results">Results</a>
+      </div>
+      <span class="nav-note">Anonymous submission, under double-blind review</span>
+    </div>
+  </nav>
+
+  <button class="scroll-to-top" id="scroll-top" type="button" title="Scroll to top" aria-label="Scroll to top"><svg class="icon"><use href="#i-up"/></svg></button>
+
+  <main id="main">
+    <!-- ================= Title ================= -->
+    <header class="hero" id="top">
+      <div class="container is-desktop">
+        <h1 class="publication-title"><span class="wordmark">AGT</span>: Amodal 4D Reconstruction from Obstructed Driving Videos</h1>
+        <!-- Authors are withheld while the paper is under review. -->
+        <div class="publication-authors">Anonymous Authors</div>
+        <div class="publication-note">Authors and affiliations are withheld for double-blind review</div>
+        <div class="publication-links">
+          <span class="button" title="Under review"><svg class="icon"><use href="#i-file"/></svg><span>Paper (under review)</span></span>
+          <span class="button" title="Coming soon"><svg class="icon"><use href="#i-code"/></svg><span>Code (soon)</span></span>
+          <a class="button" href="#citation"><svg class="icon"><use href="#i-quote"/></svg><span>BibTeX</span></a>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= TL;DR ================= -->
+    <section class="band">
+      <div class="container is-narrow">
+        <div class="tldr-box">
+          <span class="tldr-tag">TL;DR</span>
+          <span class="bn">AGT</span> reconstructs a complete 4D Gaussian scene from a driving video whose every frame is partly hidden by the hood, the dashboard, windshield reflections or watermarks. It reconstructs what some frame observes in <i>a single forward pass</i>, and generates only what <i>no frame observes</i>. It is trained on <span class="bn">Amodal</span><span class="bc">Drive</span>, a paired dataset built from web-scale real dashcam videos.
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Abstract ================= -->
+    <section class="section" id="abstract">
+      <div class="container is-narrow">
+        <details class="fold" open>
+          <summary><h2 class="title">Abstract</h2><svg class="icon chev"><use href="#i-down"/></svg></summary>
+          <div class="content">
+            <p>With the recent advancement of 4D Gaussian Splatting (4DGS) reconstruction, autonomous driving policies are increasingly trained and evaluated in reconstructed simulation worlds. However, these reconstructions rely on clean, curated data from dedicated autonomous driving datasets, which limits their scale. In-the-wild driving videos are abundant on the web, but they carry no annotations and are obstructed by occluders, reflections and watermarks. To bridge this gap, we present <b>A</b>modal <b>G</b>aussian <b>T</b>ransformer (AGT), a feed-forward model for amodal 4D reconstruction. It reconstructs the full 4D scene from obstructed driving videos, including the parts that camera-attached occluders hide. As the camera moves, other frames observe part of each occluded region, and no input frame observes the rest. AGT therefore reconstructs the observed part from the input frames in a single forward pass and fills only the unobserved part with generative completion. To train and evaluate the model, we build AmodalDrive, a dataset synthesized from dashcam videos and curated driving datasets. Trained only on the Waymo part of AmodalDrive, AGT outperforms prior feed-forward and per-scene optimization methods by 3&nbsp;dB in PSNR on its test split. It also transfers to other datasets without fine-tuning and to real in-the-wild driving videos. In closed-loop simulation, scenes reconstructed by AGT are more consistent with a clean reference world than those of the baseline method.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ================= Videos ================= -->
+    <section class="section" id="videos">
+      <div class="container is-narrow">
+        <h2 class="title">Reconstruction Results</h2>
+        <p class="subtitle">Each video plays the same frames of one clip side by side: the input first, then the other methods, and <span class="bn">AGT</span> last. Use the buttons to switch between clips.</p>
+      </div>
+      <div class="container is-wide">
+        <div class="gv" data-grid="real"></div>
+        <p class="figure-caption centered">Dashcam clips from MM-AU and BDD100K. They have no clean ground truth, and none of them is used to build <span class="bn">Amodal</span><span class="bc">Drive</span>.</p>
+        <div class="gv" data-grid="syn"></div>
+        <p class="figure-caption centered">Clips from the Waymo test split of <span class="bn">Amodal</span><span class="bc">Drive</span>, where a pixel-aligned clean reference exists.</p>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ================= Method ================= -->
+    <section class="section" id="method">
+      <div class="container is-narrow">
+        <h2 class="title">Method Overview</h2>
+        <div class="figure-card">
+          <button class="figure-open" data-figure-title="Overview of AGT" aria-label="Enlarge the method overview"><img src="assets/images/fig-pipeline.webp" width="2600" height="1256" loading="lazy" decoding="async" alt="Method overview in four stages: amodal geometry recovery with masked attention and a teacher model, observability propagation from depth, cameras and the occluder mask, observed appearance reconstruction with a gate and a loss mask, and generative completion followed by scene optimization and closed-loop simulation."></button>
+        </div>
+        <p class="figure-caption"><b>Overview of <span class="bn">AGT</span>.</b> Given an obstructed driving video, AGT first recovers correct geometry under the obstructed inputs with masked attention and teacher depth distillation. Second, it computes the observability of every pixel from this geometry. Third, it reconstructs appearance only in the observed regions. Finally, the unobserved regions are filled by generative completion and optimized into the Gaussian scene, which is then ready for downstream closed-loop simulation.</p>
+        <details class="re-collapse">
+          <summary><svg class="icon"><use href="#i-images"/></svg> <span>Observability across frames</span> <svg class="icon chev"><use href="#i-down"/></svg></summary>
+          <div class="re-collapse-body">
+            <button class="figure-open" data-figure-title="Observability across frames" aria-label="Enlarge the observability illustration"><img src="assets/images/fig-observability.webp" width="2600" height="1770" loading="lazy" decoding="async" alt="Two frames of the same scene. A road point seen directly at frame t is hidden behind the occluder at frame t+1 but still counts as observed. The region that no frame observes is marked in red."></button>
+            <p class="figure-caption">A road point seen directly at frame <i>t</i> is hidden behind the occluder at frame <i>t</i>+1, but it has already been observed, so it still counts as observed. The red region is observed by no input frame.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ================= Dataset ================= -->
+    <section class="section" id="dataset">
+      <div class="container is-narrow">
+        <h2 class="wordmark-title"><span class="bn">Amodal</span><span class="bc">Drive</span></h2>
+        <p class="tagline">1,178 real occluder layers &middot; every obstructed video paired 1:1 with a clean one</p>
+        <div class="content">
+          <p>In-the-wild driving videos carry no camera poses, depth or clean targets, so they cannot supervise training directly. <span class="bn">Amodal</span><span class="bc">Drive</span> simulates them: real occluder layers are separated from internet dashcam videos by joint photometric reconstruction, their solid parts such as the <b>hood</b> and the <b>dashboard</b> are set fully opaque while windshield reflections stay translucent, and each layer is composited onto clean, fully annotated driving clips. Every obstructed video therefore has a pixel-aligned clean counterpart with cameras, depth and motion labels.</p>
+        </div>
+        <div class="figure-card">
+          <button class="figure-open" data-figure-title="AmodalDrive curation pipeline" aria-label="Enlarge the dataset curation pipeline"><img src="assets/images/fig-dataset.webp" width="2600" height="2424" loading="lazy" decoding="async" alt="Curation pipeline in three steps. Harvest: occluder layers and their opacity are separated from raw dashcam videos. Opacity refinement: proposed parts such as hood, dashboard and toy are verified as opaque or translucent. Composition: a refined layer is composited onto clean frames."></button>
+        </div>
+        <p class="figure-caption centered"><span class="bn">Amodal</span><span class="bc">Drive</span> curation pipeline. The official train/test splits of the source datasets are kept, and no occluder layer appears on both sides.</p>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ================= Results ================= -->
+    <section class="section" id="results">
+      <div class="container is-narrow">
+        <h2 class="title">Benchmarking Results</h2>
+        <p class="subtitle">On the Waymo test split of <span class="bn">Amodal</span><span class="bc">Drive</span>, every method receives <b>four obstructed frames</b> and renders the held-out frames between them, which are compared with the clean frames. We compare with nine feed-forward and per-scene optimization methods:</p>
+        <div class="tags">
+          <span class="tag">DGGT</span><span class="tag">STORM</span><span class="tag">Depth Anything 3</span><span class="tag">Instant NuRec</span><span class="tag">3DGS</span><span class="tag">PVG</span><span class="tag">Deformable-GS</span><span class="tag">DC-Gaussian</span><span class="tag">RIDE-Splat</span>
+        </div>
+        <div class="stats">
+          <div class="stat-box"><div class="num">+3.01<small> dB</small></div><div class="lbl">PSNR over the best prior method</div></div>
+          <div class="stat-box"><div class="num">0.114</div><div class="lbl">depth AbsRel, from 0.177</div></div>
+          <div class="stat-box"><div class="num">+4.93<small> dB</small></div><div class="lbl">over DGGT under heavy occlusion</div></div>
+        </div>
+
+        <div class="re-wrap">
+          <div id="re-tabs" class="re-tabs"></div>
+          <div id="re-metrics" class="re-metrics"></div>
+          <div class="re-card">
+            <div class="re-card-head">
+              <div>
+                <div class="re-metric-title" id="re-title"></div>
+                <div class="re-metric-desc" id="re-desc"></div>
+              </div>
+              <button class="re-table-btn" id="re-table-btn" type="button" aria-pressed="false"><svg class="icon"><use href="#i-table"/></svg><span>Data table</span></button>
+            </div>
+            <div class="re-legend" id="re-legend"></div>
+            <div class="re-chart-wrap">
+              <div class="re-chart" id="re-chart"></div>
+              <div id="re-tooltip"></div>
+            </div>
+            <div class="re-table" id="re-table" hidden>
+              <table class="table" id="main-table">
+          <thead>
+          <tr><th rowspan="2" class="method">Method</th><th colspan="3">Full frame</th><th colspan="3">Observed region</th><th colspan="3">Unobserved region</th><th colspan="2">Depth</th></tr>
+          <tr><th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th><th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th><th>PSNR↑</th><th>LPIPS↓</th><th>DISTS↓</th><th>AbsRel↓</th><th>D-RMSE↓</th></tr>
+          </thead>
+          <tbody>
+          <tr><td class="method">DGGT</td><td>18.52</td><td>0.594</td><td>0.275</td><td>20.05</td><td>0.643</td><td>0.190</td><td>13.63</td><td>0.621</td><td>0.359</td><td>0.177</td><td>5.63</td></tr>
+          <tr><td class="method">STORM</td><td>19.45</td><td>0.614</td><td>0.413</td><td>20.69</td><td>0.650</td><td>0.340</td><td>15.86</td><td>0.606</td><td>0.330</td><td>0.199</td><td>6.94</td></tr>
+          <tr><td class="method">Depth Anything 3</td><td>18.90</td><td>0.508</td><td>0.321</td><td>19.54</td><td>0.529</td><td>0.250</td><td>16.89</td><td>0.545</td><td>0.324</td><td>0.365</td><td>9.50</td></tr>
+          <tr><td class="method">Instant NuRec</td><td>17.41</td><td>0.511</td><td>0.493</td><td>17.65</td><td>0.518</td><td>0.427</td><td>17.35</td><td>0.556</td><td>0.345</td><td>0.401</td><td>10.12</td></tr>
+          <tr><td class="method">3DGS</td><td>17.43</td><td>0.491</td><td>0.455</td><td>18.43</td><td>0.517</td><td>0.383</td><td>16.94</td><td>0.528</td><td>0.336</td><td>0.667</td><td>14.58</td></tr>
+          <tr><td class="method">PVG</td><td>18.22</td><td>0.525</td><td>0.398</td><td>19.47</td><td>0.556</td><td>0.323</td><td>16.93</td><td>0.533</td><td>0.333</td><td>0.676</td><td>14.68</td></tr>
+          <tr><td class="method">Deformable-GS</td><td>17.80</td><td>0.532</td><td>0.380</td><td>19.18</td><td>0.572</td><td>0.303</td><td>16.14</td><td>0.542</td><td>0.345</td><td>0.659</td><td>14.49</td></tr>
+          <tr><td class="method">DC-Gaussian</td><td>11.99</td><td>0.242</td><td>0.570</td><td>12.16</td><td>0.259</td><td>0.550</td><td>11.25</td><td>0.639</td><td>0.434</td><td>0.617</td><td>14.76</td></tr>
+          <tr><td class="method">RIDE-Splat</td><td>15.11</td><td>0.382</td><td>0.505</td><td>15.27</td><td>0.396</td><td>0.458</td><td>14.98</td><td>0.572</td><td>0.373</td><td>0.603</td><td>14.34</td></tr>
+          <tr class="variant rule"><td class="method">AGT w/o completion</td><td>21.87</td><td>0.679</td><td>0.182</td><td>22.65</td><td>0.701</td><td>0.128</td><td>19.52</td><td>0.400</td><td>0.288</td><td>0.122</td><td>4.89</td></tr>
+          <tr class="ours"><td class="method">AGT (Ours)</td><td>22.46</td><td>0.681</td><td>0.172</td><td>22.65</td><td>0.699</td><td>0.129</td><td>22.90</td><td>0.318</td><td>0.267</td><td>0.114</td><td>4.83</td></tr>
+          </tbody>
+          </table>
+            </div>
+          </div>
+          <p class="figure-caption centered">Methods that require camera poses are given the poses and intrinsics estimated by VGGT. The observed and unobserved regions are computed from the clean clip and are the same for all methods.</p>
+        </div>
+
+        <details class="re-collapse">
+          <summary><svg class="icon"><use href="#i-images"/></svg> <span>Qualitative examples</span> <svg class="icon chev"><use href="#i-down"/></svg></summary>
+          <div class="re-collapse-body">
+            <button class="figure-open" data-figure-title="Qualitative comparison on held-out frames" aria-label="Enlarge the qualitative comparison"><img src="assets/images/fig-qualitative.webp" width="2600" height="1352" loading="lazy" decoding="async" alt="Held-out frames of four AmodalDrive clips and two real dashcam clips in seven columns: input, ground truth, PVG, STORM, DGGT, Instant NuRec and AGT."></button>
+            <p class="figure-caption">Held-out frames from four input frames. Top: test clips of AmodalDrive. Bottom: real dashcam videos, which have no ground truth.</p>
+            <button class="figure-open" data-figure-title="Visual ablation of the model components" aria-label="Enlarge the visual ablation"><img src="assets/images/fig-ablation.webp" width="2600" height="963" loading="lazy" decoding="async" alt="Two clips in four columns: input, baseline fine-tuned on AmodalDrive, with amodal geometry recovery added, and with observed reconstruction and generative completion added."></button>
+            <p class="figure-caption">Visual ablation. Fine-tuning on AmodalDrive alone covers visible content with a road-colored blob. Amodal geometry recovery returns the Gaussians to the correct positions, and generative completion replaces the blob with sharp and plausible content.</p>
+          </div>
+        </details>
+
+        <h3 class="sub-heading">Zero-shot generalization to nuScenes and Argoverse2</h3>
+        <div class="table-container">
+          <table class="table">
+          <thead>
+          <tr><th rowspan="2" class="method">Method</th><th colspan="4">nuScenes</th><th colspan="4">Argoverse2</th></tr>
+          <tr><th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th><th>AbsRel↓</th><th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th><th>AbsRel↓</th></tr>
+          </thead>
+          <tbody>
+          <tr><td class="method">DGGT</td><td>17.30</td><td>0.584</td><td>0.326</td><td>0.209</td><td>16.72</td><td>0.571</td><td>0.303</td><td>0.201</td></tr>
+          <tr><td class="method">STORM</td><td>18.70</td><td>0.605</td><td>0.413</td><td>0.280</td><td>17.90</td><td>0.588</td><td>0.433</td><td>0.313</td></tr>
+          <tr><td class="method">Depth Anything 3</td><td>18.36</td><td>0.507</td><td>0.347</td><td>0.567</td><td>17.67</td><td>0.483</td><td>0.343</td><td>0.409</td></tr>
+          <tr><td class="method">Instant NuRec</td><td>17.94</td><td>0.545</td><td>0.400</td><td>0.331</td><td>16.22</td><td>0.488</td><td>0.541</td><td>0.456</td></tr>
+          <tr class="ours rule"><td class="method">AGT (Ours)</td><td>19.94</td><td>0.674</td><td>0.216</td><td>0.170</td><td>20.40</td><td>0.655</td><td>0.197</td><td>0.168</td></tr>
+          </tbody>
+          </table>
+        </div>
+
+        <div class="gv gv-wide" data-grid="zs"></div>
+        <p class="figure-caption centered">Zero-shot clips from nuScenes and Argoverse2. Every method receives four obstructed frames and renders all 16 frames of the clip; none of the models is fine-tuned on either dataset.</p>
+
+        <h3 class="sub-heading">Results by occlusion severity</h3>
+        <div class="table-container">
+          <table class="table">
+          <thead>
+          <tr><th rowspan="2" class="method">Occluder area</th><th colspan="2">≤ 10%</th><th colspan="2">10%–20%</th><th colspan="2">&gt; 20%</th></tr>
+          <tr><th>DGGT</th><th class="ours">AGT</th><th>DGGT</th><th class="ours">AGT</th><th>DGGT</th><th class="ours">AGT</th></tr>
+          </thead>
+          <tbody>
+          <tr><td class="method">PSNR↑</td><td>20.58</td><td class="ours">23.25<span class="delta">+2.67</span></td><td>18.86</td><td class="ours">22.52<span class="delta">+3.66</span></td><td>17.02</td><td class="ours">21.95<span class="delta">+4.93</span></td></tr>
+          <tr><td class="method">SSIM↑</td><td>0.656</td><td class="ours">0.708<span class="delta">+0.05</span></td><td>0.596</td><td class="ours">0.677<span class="delta">+0.08</span></td><td>0.555</td><td class="ours">0.668<span class="delta">+0.11</span></td></tr>
+          <tr><td class="method">LPIPS↓</td><td>0.215</td><td class="ours">0.138<span class="delta">−0.08</span></td><td>0.260</td><td class="ours">0.160<span class="delta">−0.10</span></td><td>0.323</td><td class="ours">0.202<span class="delta">−0.12</span></td></tr>
+          <tr><td class="method">AbsRel↓</td><td>0.109</td><td class="ours">0.095<span class="delta">−0.01</span></td><td>0.167</td><td class="ours">0.110<span class="delta">−0.06</span></td><td>0.225</td><td class="ours">0.148<span class="delta">−0.08</span></td></tr>
+          </tbody>
+          </table>
+        </div>
+
+        <h3 class="sub-heading">Ablation of the training data and the model components</h3>
+        <div class="table-container">
+          <table class="table">
+          <thead>
+          <tr><th rowspan="2" class="method">Setting</th><th colspan="3">Observed region</th><th colspan="3">Unobserved region</th></tr>
+          <tr><th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th><th>PSNR↑</th><th>LPIPS↓</th><th>DISTS↓</th></tr>
+          </thead>
+          <tbody>
+          <tr class="group"><td colspan="7">Training data, with AGT without completion</td></tr>
+          <tr><td class="method">Random masks</td><td>21.16</td><td>0.668</td><td>0.151</td><td>11.50</td><td>0.616</td><td>0.351</td></tr>
+          <tr><td class="method">+ Real opaque occluders</td><td>21.86</td><td>0.694</td><td>0.136</td><td>18.48</td><td>0.413</td><td>0.293</td></tr>
+          <tr><td class="method">+ Translucent reflections</td><td><b>22.65</b></td><td><b>0.701</b></td><td><b>0.128</b></td><td><b>19.52</b></td><td><b>0.400</b></td><td><b>0.288</b></td></tr>
+          <tr class="group"><td colspan="7">Model components</td></tr>
+          <tr><td class="method">Baseline + AmodalDrive</td><td>22.33</td><td>0.682</td><td>0.178</td><td>21.57</td><td>0.428</td><td>0.311</td></tr>
+          <tr><td class="method">+ Amodal geometry recovery</td><td>22.46</td><td>0.687</td><td>0.138</td><td>22.39</td><td>0.339</td><td>0.273</td></tr>
+          <tr><td class="method">+ Observed reconstruction &amp; generative completion</td><td><b>22.65</b></td><td><b>0.699</b></td><td><b>0.129</b></td><td><b>22.90</b></td><td><b>0.318</b></td><td><b>0.267</b></td></tr>
+          </tbody>
+          </table>
+        </div>
+
+        <h3 class="sub-heading">Closed-loop simulation against the NuRec reference world</h3>
+        <div class="table-container">
+          <table class="table">
+          <thead>
+          <tr><th rowspan="2" class="method">Reconstruction</th><th colspan="3">Deviation↓</th><th colspan="3">Correlation↑</th></tr>
+          <tr><th>Collision</th><th>Off-road</th><th>Progress</th><th>Collision</th><th>Off-road</th><th>Progress</th></tr>
+          </thead>
+          <tbody>
+          <tr><td class="method">DGGT</td><td>5.2</td><td>10.4</td><td>10.0</td><td>0.30</td><td>0.14</td><td>0.92</td></tr>
+          <tr class="ours rule"><td class="method">AGT (Ours)</td><td>2.1</td><td>5.7</td><td>2.4</td><td>0.90</td><td>0.34</td><td>0.99</td></tr>
+          </tbody>
+          </table>
+        </div>
+        <p class="figure-caption centered">Five recent driving policies are run in closed loop in AlpaSim on 150 scenes, and only the reconstruction that renders the camera is swapped. Deviation is the mean absolute difference of each driving metric from the reference over the policies, in points. Correlation is the Pearson correlation of the per-policy values.</p>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ================= Findings ================= -->
+    <section class="section" id="findings">
+      <div class="container is-narrow">
+        <h2 class="title">Observations &amp; Insights</h2>
+        <div class="takeaway"><b>1. Existing methods reconstruct the occluder as part of the scene.</b> STORM and DGGT leave the hood and the watermarks on the road, the scenes of Instant NuRec collapse, and per-scene optimization from four frames is blurry overall. AGT outperforms all of them on every image quality and depth metric, by 3&nbsp;dB in full-frame PSNR.</div>
+        <div class="takeaway"><b>2. The heavier the occlusion, the larger the gain.</b> From the lightest to the heaviest occlusion, DGGT loses 3.56&nbsp;dB while AGT loses only 1.30&nbsp;dB, so the lead of AGT widens from 2.67&nbsp;dB to 4.93&nbsp;dB.</div>
+        <div class="takeaway"><b>3. A high PSNR in the unobserved region does not mean the scene is recovered.</b> The road is nearly uniform in color, so a blob in a color close to the road already reaches 21.57&nbsp;dB. The perceptual metrics expose the gap: LPIPS drops from 0.428 to 0.318 once geometry is recovered and the region is completed.</div>
+        <div class="takeaway"><b>4. The reconstruction transfers, and it matters downstream.</b> Trained only on Waymo, AGT achieves the best results on nuScenes and Argoverse2 without fine-tuning. In closed-loop simulation, its worlds stay closer to the clean reference world than those of DGGT on every measure.</div>
+      </div>
+    </section>
+
+    <!-- ================= BibTeX ================= -->
+    <section class="section" id="citation">
+      <div class="container is-narrow">
+        <h2 class="title" style="text-align:left;margin-bottom:1.25rem">BibTeX</h2>
+        <div class="bibtex-wrapper">
+          <button class="copy-btn" id="copy-bibtex" type="button"><svg class="icon"><use href="#i-copy"/></svg><span class="copy-text">Copy</span></button>
+          <pre><code id="bibtex-code">@inproceedings{agt2027,
+  title     = {AGT: Amodal 4D Reconstruction from Obstructed Driving Videos},
+  author    = {Anonymous},
+  booktitle = {CVPR},
+  year      = {2027}
+}</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container is-narrow">Anonymous project page for a paper under double-blind review. All assets are local: the page works fully offline. Set in Inter (SIL OFL 1.1).</div>
+  </footer>
+
+  <dialog id="figure-dialog" aria-labelledby="figure-title">
+    <div class="dialog-header"><h2 id="figure-title"></h2><button id="figure-close" class="dialog-close" aria-label="Close enlarged figure">×</button></div>
+    <div class="figure-viewport"><img id="figure-image" alt=""></div>
+  </dialog>
+
+  <script type="application/json" id="grid-data">{"real": {"title": "In-the-wild dashcam videos", "width": 1566, "height": 294, "cells": [{"label": "Dashcam video", "ours": false, "x": 0.0, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "DGGT", "ours": false, "x": 33.461, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "AGT (Ours)", "ours": true, "x": 66.922, "y": 0.0, "w": 33.078, "h": 100.0}], "cases": [{"label": "MM-AU · day", "src": "assets/videos/grid-real-a.mp4", "poster": "assets/images/grid-real-a.webp"}, {"label": "MM-AU · night", "src": "assets/videos/grid-real-b.mp4", "poster": "assets/images/grid-real-b.webp"}, {"label": "BDD100K · day", "src": "assets/videos/grid-real-c.mp4", "poster": "assets/images/grid-real-c.webp"}]}, "syn": {"title": "AmodalDrive test clips", "width": 1566, "height": 294, "cells": [{"label": "Obstructed input", "ours": false, "x": 0.0, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "Clean reference", "ours": false, "x": 33.461, "y": 0.0, "w": 33.078, "h": 100.0}, {"label": "AGT (Ours)", "ours": true, "x": 66.922, "y": 0.0, "w": 33.078, "h": 100.0}], "cases": [{"label": "Day · clip 1", "src": "assets/videos/grid-syn-a.mp4", "poster": "assets/images/grid-syn-a.webp"}, {"label": "Day · clip 2", "src": "assets/videos/grid-syn-b.mp4", "poster": "assets/images/grid-syn-b.webp"}, {"label": "Day · clip 3", "src": "assets/videos/grid-syn-c.mp4", "poster": "assets/images/grid-syn-c.webp"}, {"label": "Night", "src": "assets/videos/grid-syn-d.mp4", "poster": "assets/images/grid-syn-d.webp"}]}, "zs": {"title": "Zero-shot clips", "width": 2090, "height": 594, "cells": [{"label": "Obstructed input", "ours": false, "x": 0.0, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "Clean reference", "ours": false, "x": 25.072, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "DGGT", "ours": false, "x": 50.144, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "STORM", "ours": false, "x": 75.215, "y": 0.0, "w": 24.785, "h": 49.495}, {"label": "Depth Anything 3", "ours": false, "x": 12.536, "y": 50.505, "w": 24.785, "h": 49.495}, {"label": "Instant NuRec", "ours": false, "x": 37.608, "y": 50.505, "w": 24.785, "h": 49.495}, {"label": "AGT (Ours)", "ours": true, "x": 62.679, "y": 50.505, "w": 24.785, "h": 49.495}], "cases": [{"label": "nuScenes · 1", "src": "assets/videos/grid-zs-nus-a.mp4", "poster": "assets/images/grid-zs-nus-a.webp"}, {"label": "nuScenes · 2", "src": "assets/videos/grid-zs-nus-b.mp4", "poster": "assets/images/grid-zs-nus-b.webp"}, {"label": "nuScenes · 3", "src": "assets/videos/grid-zs-nus-c.mp4", "poster": "assets/images/grid-zs-nus-c.webp"}, {"label": "Argoverse2 · 1", "src": "assets/videos/grid-zs-av2-a.mp4", "poster": "assets/images/grid-zs-av2-a.webp"}, {"label": "Argoverse2 · 2", "src": "assets/videos/grid-zs-av2-b.mp4", "poster": "assets/images/grid-zs-av2-b.webp"}, {"label": "Argoverse2 · 3", "src": "assets/videos/grid-zs-av2-c.mp4", "poster": "assets/images/grid-zs-av2-c.webp"}]}}</script>
+</body>
+</html>
