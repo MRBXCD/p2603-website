@@ -7,8 +7,8 @@ const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}
 // ---------------- navigation: active tab follows the scroll position, scroll-to-top appears after 300px ----------------
 (function navigation() {
   const tabs = [...document.querySelectorAll('.nav-tab')];
-  const anchors = [['top', 'top'], ['abstract', 'top'], ['videos', 'videos'], ['results', 'results'], ['findings', 'results'],
-    ['dataset', 'method'], ['method', 'method'], ['citation', 'method']]
+  const anchors = [['top', 'top'], ['abstract', 'top'], ['videos', 'videos'], ['method', 'method'], ['dataset', 'method'],
+    ['results', 'results'], ['findings', 'results'], ['citation', 'results']]
     .map(([id, tab]) => [document.getElementById(id), tab]).filter(([node]) => node);
   const scrollButton = document.getElementById('scroll-top');
   let queued = false;

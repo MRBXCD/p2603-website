@@ -38,8 +38,8 @@
       <div class="nav-tabs">
         <a class="nav-tab is-active" href="#top" data-spy="top">Overview</a>
         <a class="nav-tab" href="#videos" data-spy="videos">Videos</a>
+        <a class="nav-tab" href="#method" data-spy="method">Method</a>
         <a class="nav-tab" href="#results" data-spy="results">Results</a>
-        <a class="nav-tab" href="#dataset" data-spy="method">Method</a>
       </div>
       <span class="nav-note">Anonymous submission, under double-blind review</span>
     </div>
@@ -98,6 +98,43 @@
         <p class="figure-caption centered">Dashcam clips from MM-AU and BDD100K. They have no clean ground truth, and none of them is used to build <span class="bn">Amodal</span><span class="bc">Drive</span>.</p>
         <div class="gv" data-grid="syn"></div>
         <p class="figure-caption centered">Clips from the Waymo test split of <span class="bn">Amodal</span><span class="bc">Drive</span>, where a pixel-aligned clean reference exists.</p>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ================= Method ================= -->
+    <section class="section" id="method">
+      <div class="container is-narrow">
+        <h2 class="title">Method Overview</h2>
+        <div class="figure-card">
+          <button class="figure-open" data-figure-title="Overview of AGT" aria-label="Enlarge the method overview"><img src="assets/images/fig-pipeline.webp" width="2600" height="1256" loading="lazy" decoding="async" alt="Method overview in four stages: amodal geometry recovery with masked attention and a teacher model, observability propagation from depth, cameras and the occluder mask, observed appearance reconstruction with a gate and a loss mask, and generative completion followed by scene optimization and closed-loop simulation."></button>
+        </div>
+        <p class="figure-caption"><b>Overview of <span class="bn">AGT</span>.</b> Given an obstructed driving video, AGT first recovers correct geometry under the obstructed inputs with masked attention and teacher depth distillation. Second, it computes the observability of every pixel from this geometry. Third, it reconstructs appearance only in the observed regions. Finally, the unobserved regions are filled by generative completion and optimized into the Gaussian scene, which is then ready for downstream closed-loop simulation.</p>
+        <details class="re-collapse">
+          <summary><svg class="icon"><use href="#i-images"/></svg> <span>Observability across frames</span> <svg class="icon chev"><use href="#i-down"/></svg></summary>
+          <div class="re-collapse-body">
+            <button class="figure-open" data-figure-title="Observability across frames" aria-label="Enlarge the observability illustration"><img src="assets/images/fig-observability.webp" width="2600" height="1770" loading="lazy" decoding="async" alt="Two frames of the same scene. A road point seen directly at frame t is hidden behind the occluder at frame t+1 but still counts as observed. The region that no frame observes is marked in red."></button>
+            <p class="figure-caption">A road point seen directly at frame <i>t</i> is hidden behind the occluder at frame <i>t</i>+1, but it has already been observed, so it still counts as observed. The red region is observed by no input frame.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ================= Dataset ================= -->
+    <section class="section" id="dataset">
+      <div class="container is-narrow">
+        <h2 class="wordmark-title"><span class="bn">Amodal</span><span class="bc">Drive</span></h2>
+        <p class="tagline">1,178 real occluder layers &middot; every obstructed video paired 1:1 with a clean one</p>
+        <div class="content">
+          <p>In-the-wild driving videos carry no camera poses, depth or clean targets, so they cannot supervise training directly. <span class="bn">Amodal</span><span class="bc">Drive</span> simulates them: real occluder layers are separated from internet dashcam videos by joint photometric reconstruction, their solid parts such as the <b>hood</b> and the <b>dashboard</b> are set fully opaque while windshield reflections stay translucent, and each layer is composited onto clean, fully annotated driving clips. Every obstructed video therefore has a pixel-aligned clean counterpart with cameras, depth and motion labels.</p>
+        </div>
+        <div class="figure-card">
+          <button class="figure-open" data-figure-title="AmodalDrive curation pipeline" aria-label="Enlarge the dataset curation pipeline"><img src="assets/images/fig-dataset.webp" width="2600" height="2424" loading="lazy" decoding="async" alt="Curation pipeline in three steps. Harvest: occluder layers and their opacity are separated from raw dashcam videos. Opacity refinement: proposed parts such as hood, dashboard and toy are verified as opaque or translucent. Composition: a refined layer is composited onto clean frames."></button>
+        </div>
+        <p class="figure-caption centered"><span class="bn">Amodal</span><span class="bc">Drive</span> curation pipeline. The official train/test splits of the source datasets are kept, and no occluder layer appears on both sides.</p>
       </div>
     </section>
 
@@ -254,43 +291,6 @@
         <div class="takeaway"><b>2. The heavier the occlusion, the larger the gain.</b> From the lightest to the heaviest occlusion, DGGT loses 3.56&nbsp;dB while AGT loses only 1.30&nbsp;dB, so the lead of AGT widens from 2.67&nbsp;dB to 4.93&nbsp;dB.</div>
         <div class="takeaway"><b>3. A high PSNR in the unobserved region does not mean the scene is recovered.</b> The road is nearly uniform in color, so a blob in a color close to the road already reaches 21.57&nbsp;dB. The perceptual metrics expose the gap: LPIPS drops from 0.428 to 0.318 once geometry is recovered and the region is completed.</div>
         <div class="takeaway"><b>4. The reconstruction transfers, and it matters downstream.</b> Trained only on Waymo, AGT achieves the best results on nuScenes and Argoverse2 without fine-tuning. In closed-loop simulation, its worlds stay closer to the clean reference world than those of DGGT on every measure.</div>
-      </div>
-    </section>
-
-    <div class="section-divider"></div>
-
-    <!-- ================= Dataset ================= -->
-    <section class="section" id="dataset">
-      <div class="container is-narrow">
-        <h2 class="wordmark-title"><span class="bn">Amodal</span><span class="bc">Drive</span></h2>
-        <p class="tagline">1,178 real occluder layers &middot; every obstructed video paired 1:1 with a clean one</p>
-        <div class="content">
-          <p>In-the-wild driving videos carry no camera poses, depth or clean targets, so they cannot supervise training directly. <span class="bn">Amodal</span><span class="bc">Drive</span> simulates them: real occluder layers are separated from internet dashcam videos by joint photometric reconstruction, their solid parts such as the <b>hood</b> and the <b>dashboard</b> are set fully opaque while windshield reflections stay translucent, and each layer is composited onto clean, fully annotated driving clips. Every obstructed video therefore has a pixel-aligned clean counterpart with cameras, depth and motion labels.</p>
-        </div>
-        <div class="figure-card">
-          <button class="figure-open" data-figure-title="AmodalDrive curation pipeline" aria-label="Enlarge the dataset curation pipeline"><img src="assets/images/fig-dataset.webp" width="2600" height="2424" loading="lazy" decoding="async" alt="Curation pipeline in three steps. Harvest: occluder layers and their opacity are separated from raw dashcam videos. Opacity refinement: proposed parts such as hood, dashboard and toy are verified as opaque or translucent. Composition: a refined layer is composited onto clean frames."></button>
-        </div>
-        <p class="figure-caption centered"><span class="bn">Amodal</span><span class="bc">Drive</span> curation pipeline. The official train/test splits of the source datasets are kept, and no occluder layer appears on both sides.</p>
-      </div>
-    </section>
-
-    <div class="section-divider"></div>
-
-    <!-- ================= Method ================= -->
-    <section class="section" id="method">
-      <div class="container is-narrow">
-        <h2 class="title">Method Overview</h2>
-        <div class="figure-card">
-          <button class="figure-open" data-figure-title="Overview of AGT" aria-label="Enlarge the method overview"><img src="assets/images/fig-pipeline.webp" width="2600" height="1256" loading="lazy" decoding="async" alt="Method overview in four stages: amodal geometry recovery with masked attention and a teacher model, observability propagation from depth, cameras and the occluder mask, observed appearance reconstruction with a gate and a loss mask, and generative completion followed by scene optimization and closed-loop simulation."></button>
-        </div>
-        <p class="figure-caption"><b>Overview of <span class="bn">AGT</span>.</b> Given an obstructed driving video, AGT first recovers correct geometry under the obstructed inputs with masked attention and teacher depth distillation. Second, it computes the observability of every pixel from this geometry. Third, it reconstructs appearance only in the observed regions. Finally, the unobserved regions are filled by generative completion and optimized into the Gaussian scene, which is then ready for downstream closed-loop simulation.</p>
-        <details class="re-collapse">
-          <summary><svg class="icon"><use href="#i-images"/></svg> <span>Observability across frames</span> <svg class="icon chev"><use href="#i-down"/></svg></summary>
-          <div class="re-collapse-body">
-            <button class="figure-open" data-figure-title="Observability across frames" aria-label="Enlarge the observability illustration"><img src="assets/images/fig-observability.webp" width="2600" height="1770" loading="lazy" decoding="async" alt="Two frames of the same scene. A road point seen directly at frame t is hidden behind the occluder at frame t+1 but still counts as observed. The region that no frame observes is marked in red."></button>
-            <p class="figure-caption">A road point seen directly at frame <i>t</i> is hidden behind the occluder at frame <i>t</i>+1, but it has already been observed, so it still counts as observed. The red region is observed by no input frame.</p>
-          </div>
-        </details>
       </div>
     </section>
 
