@@ -292,17 +292,6 @@
 
     <div class="section-divider"></div>
 
-    <!-- ================= Findings ================= -->
-    <section class="section" id="findings">
-      <div class="container is-narrow">
-        <h2 class="title">Observations &amp; Insights</h2>
-        <div class="takeaway"><b>1. Existing methods reconstruct the occluder as part of the scene.</b> STORM and DGGT leave the hood and the watermarks on the road, the scenes of Instant NuRec collapse, and per-scene optimization from four frames is blurry overall. AGT outperforms all of them on every image quality and depth metric, by 3&nbsp;dB in full-frame PSNR.</div>
-        <div class="takeaway"><b>2. The heavier the occlusion, the larger the gain.</b> From the lightest to the heaviest occlusion, DGGT loses 3.56&nbsp;dB while AGT loses only 1.30&nbsp;dB, so the lead of AGT widens from 2.67&nbsp;dB to 4.93&nbsp;dB.</div>
-        <div class="takeaway"><b>3. A high PSNR in the unobserved region does not mean the scene is recovered.</b> The road is nearly uniform in color, so a blob in a color close to the road already reaches 21.57&nbsp;dB. The perceptual metrics expose the gap: LPIPS drops from 0.428 to 0.318 once geometry is recovered and the region is completed.</div>
-        <div class="takeaway"><b>4. The reconstruction transfers, and it matters downstream.</b> Trained only on Waymo, AGT achieves the best results on nuScenes and Argoverse2 without fine-tuning. In closed-loop simulation, its worlds stay closer to the clean reference world than those of DGGT on every measure.</div>
-      </div>
-    </section>
-
     <!-- ================= BibTeX ================= -->
     <section class="section" id="citation">
       <div class="container is-narrow">

@@ -8,7 +8,7 @@ const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}
 (function navigation() {
   const tabs = [...document.querySelectorAll('.nav-tab')];
   const anchors = [['top', 'top'], ['abstract', 'top'], ['videos', 'videos'], ['method', 'method'], ['dataset', 'method'],
-    ['results', 'results'], ['findings', 'results'], ['citation', 'results']]
+    ['results', 'results'], ['citation', 'results']]
     .map(([id, tab]) => [document.getElementById(id), tab]).filter(([node]) => node);
   const scrollButton = document.getElementById('scroll-top');
   let queued = false;
