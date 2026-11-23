@@ -289,3 +289,12 @@ dialog::backdrop{background:rgba(15,23,42,.62)}
   *,*::before,*::after{animation:none!important;transition:none!important}
   .tldr-box:hover,.dim-card:hover,.takeaway:hover,.re-card:hover,.re-collapse:hover,.stat-box:hover,.table-container:hover,.figure-card:hover,.bibtex-wrapper pre:hover,.button:hover,.scroll-to-top:hover{transform:none}
 }
+
+/* Author list (public page only) */
+.publication-authors{line-height:1.7;margin-bottom:.6rem}
+.publication-authors .author{white-space:nowrap}
+.publication-authors sup,.publication-affiliations sup,.publication-note sup{font-size:.65em;margin-left:.1em}
+.publication-affiliations{display:flex;flex-wrap:wrap;justify-content:center;gap:.15rem 1.4rem;font-size:1rem;color:var(--text-secondary);margin-bottom:.5rem}
+.publication-affiliations sup{margin:0 .15em 0 0}
+.publication-note{display:flex;flex-wrap:wrap;justify-content:center;gap:.15rem 1.4rem;font-style:normal}
+.publication-note sup{margin:0 .15em 0 0}
